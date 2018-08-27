@@ -1,0 +1,349 @@
+/*封装的各种方法*/
+.CENTER(@W,@H) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: unit(-@W/2, rem);
+  margin-top: unit(-@H/2, rem);
+  width: unit(@W, rem);
+  height: unit(@H, rem);
+}
+
+html {
+  font-size: 100px; //1rem=100px(设计稿640px)
+}
+
+html, body {
+  //保证当前页面就是一屏幕的宽高
+  height: 100%;
+  overflow: hidden;
+  background: #007aff;
+}
+
+.mainBox {
+  //保证最大宽度就是640
+  margin: 0 auto;
+  max-width: 640px;
+  height: 100%;
+  background: #FFF;
+}
+
+.cubeBox {
+  position: relative;
+  height: 100%;
+  background: url("../images/zf_cubeBg.jpg") no-repeat;
+  background-size: cover;
+  perspective: 2000px; //3d
+  .tip {
+    position: absolute;
+    bottom: .5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    /*margin-left: -1.97rem;*/
+    width: 3.94rem;
+    height: .44rem;
+  }
+  .cube {
+    /*position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -2.55rem 0 0 -2.55rem;
+    width: 5.1rem;
+    height: 5.1rem;*/
+    .CENTER(5.1,5.1);
+    transform-style: preserve-3d;
+    transition: .3s; //3d
+    transform: scale(0.6) rotateX(-35deg) rotateY(35deg); //给魔方初始的旋转角度
+    li {
+      //把六个面全部叠加在一起
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden; //=>3d 反面不透视
+      img {
+        display: block;
+        height: 100%;
+        width: 100%;
+      }
+      //3d效果
+      &:nth-child(1) { /*li:nth-child(1),获取li中的第一个*/
+        transform: translateZ(2.55rem);
+      }
+      &:nth-child(2) { /*li:nth-child(2),获取li中的第二个*/
+        transform: translateZ(-2.55rem) rotateY(180deg);
+      }
+      &:nth-child(3) { /*li:nth-child(3),获取li中的第三个*/
+        transform: translateX(-2.55rem) rotateY(-90deg);
+      }
+      &:nth-child(4) { /*li:nth-child(3),获取li中的第三个*/
+        transform: translateX(2.55rem) rotateY(90deg);
+      }
+      &:nth-child(5) { /*li:nth-child(3),获取li中的第三个*/
+        transform: translateY(-2.55rem) rotateX(90deg);
+      }
+      &:nth-child(6) { /*li:nth-child(3),获取li中的第三个*/
+        transform: translateY(2.55rem) rotateX(-90deg);
+      }
+    }
+  }
+}
+
+/*detail-box详情区域*/
+.detailBox {
+  /*默认初始隐藏*/
+  display: none;
+  height: 100%;
+  .swiper-container {
+    height: 100%;
+    .swiper-wrapper {
+      height: 100%;
+      .swiper-slide {
+        height: 100%;
+        &:nth-child(2) {
+          background: #fff9c1;
+        }
+        &:nth-child(3) {
+          background: #e45454;
+        }
+        &:nth-child(4) {
+          background: #fac471;
+        }
+        &:nth-child(5) {
+          background: #fbffe8;
+        }
+        &:nth-child(6) {
+          background: #5975ff;
+        }
+      }
+    }
+  }
+  .page1 {
+    position: relative;
+    dl {
+      .CENTER(5.4,7.2);
+      dt, dd{
+        box-sizing: border-box;
+        height: .6rem;
+        line-height: .6rem;
+        background: #8fbb4c;
+      }
+      dt{
+        text-align: center;
+        font-size: .4rem;
+        color: yellow;
+      }
+      dd{
+        position: relative;
+        border-top: .02rem dashed rgba(255,255,255,.3);
+        i{
+          position: absolute;
+          left: .15rem;
+          top:50%;
+          margin-top: -.21rem;
+          width: .36rem;
+          height: .42rem;
+          font-size: .2rem;
+          color: #fff;
+          font-style: normal;
+          text-align: center;
+          line-height: .42rem;
+          background: url("../images/zf_outline.png") no-repeat;
+          background-size: 100% 100%;
+        }
+        a{
+          display: block;
+          margin-left:.66rem ;
+          font-size: .28rem;
+          color: #555555;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+  //page1的动画是基于makisu这个js插件实现的
+  .page2{
+    position: relative;
+    .title{
+     /*.CENTER();*/
+      opacity: 0;
+      position: absolute;
+      left: 0;
+      top:.8rem;
+      width: 100%;
+      height: .9rem;
+      line-height: .9rem;
+      text-align: center;
+      font-size: .6rem;
+      font-weight: normal;
+
+    }
+    img{
+      opacity: 0;//透明度不为0
+      .CENTER(1,1);//所有图片居中
+      &:nth-of-type(1){
+        /*
+        * .page2 img:nth-child(1):找到page2中的所有子元素的第一个，并且这个元素需要是img标签才可以（先找子元素，再看标签分类）
+        * .page2 img nth-of-type(1):先找到page2子元素的所有img,然后筛选出img中的第一个（先分组再筛选）
+        */
+        .CENTER(1.32,1.7);
+      }
+    }
+  }
+  //PAGE2的动画
+  //1.js中做了这样一个处理，滑动到某一页，让其余页的ID消失，让当前页有一个“page？”的ID
+  //2.需求：滑动到当前页，让页面中的元素有动画效果
+  //3.动画实现的规律：把当前页面所有的动画播放效果都写在id为PAGE?下（ID选择器能够保证唯一而且相对于其它选择器优先级和权重更高）
+  //4.注意点：所有需要运动的元素，执行动画之前都是隐藏的（.PAGE?中设置透明度为零）动画执行完成让其显示出来即可
+ #page2{
+    .title{
+      animation: bounceInLeft 1s both;
+    }
+    img{
+      &:nth-of-type(1){
+        animation: shake 1s both;
+      }
+      &:nth-of-type(2){
+        margin-top: -2.9rem;//-2.4+(-.5)原先定位居中的margin值，我们所有的偏移值都应该减去.5(因为.CENTER(1,1);//所有图片居中)
+      }
+      &:nth-of-type(3){
+        margin-top: -1.7rem;
+        margin-left: 1.5rem;
+      }
+      &:nth-of-type(4){
+        margin-top: .7rem;
+        margin-left: 1.5rem;
+      }
+      &:nth-of-type(5){
+        margin-top: 1.9rem;
+      }
+      &:nth-of-type(6){
+        margin-top:.7rem;
+        margin-left: -2.5rem;
+      }
+      &:nth-of-type(7){
+        margin-top: -1.7rem;
+        margin-left: -2.5rem;
+      }
+      &:not(:nth-of-type(1)){
+        transition: .5s;
+        opacity: 1;//透明度
+        animation: tada 1s .5s infinite both;
+      }
+    }
+  }
+}
+@keyframes bounceInLeft {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(-3000px, 0, 0);
+    transform: translate3d(-3000px, 0, 0);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: translate3d(25px, 0, 0);
+    transform: translate3d(25px, 0, 0);
+  }
+
+  75% {
+    -webkit-transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
+  }
+
+  90% {
+    -webkit-transform: translate3d(5px, 0, 0);
+    transform: translate3d(5px, 0, 0);
+  }
+
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  100%{
+    opacity: 1;
+  }
+}
+@keyframes shake {
+  from,
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    -webkit-transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    -webkit-transform: translate3d(10px, 0, 0);
+    transform: translate3d(10px, 0, 0);
+  }
+  100%{
+    opacity: 1;
+  }
+}
+@keyframes tada {
+  from {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+
+  10%,
+  20% {
+    -webkit-transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg);
+    transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg);
+  }
+
+  30%,
+  50%,
+  70%,
+  90% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+  }
+
+  40%,
+  60%,
+  80% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+  }
+
+  to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
+
+
+
